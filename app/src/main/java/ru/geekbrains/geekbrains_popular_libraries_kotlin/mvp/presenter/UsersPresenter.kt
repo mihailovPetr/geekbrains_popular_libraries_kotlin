@@ -7,11 +7,12 @@ import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.GithubUs
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.list.IUserListPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UsersView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.list.UserItemView
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.navigation.AndroidScreens
 
-class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) :
+class UsersPresenter(private val usersRepo: GithubUsersRepo, private val router: Router) :
     MvpPresenter<UsersView>() {
 
-    class UsersListPresenter : IUserListPresenter {
+    class UsersListPresenter() : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
         override var itemClickListener: ((UserItemView) -> Unit)? = null
 
@@ -23,7 +24,11 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) :
         override fun getCount() = users.size
     }
 
-    val usersListPresenter = UsersListPresenter()
+    val usersListPresenter = UsersListPresenter().apply {
+        itemClickListener = {
+            router.navigateTo(AndroidScreens().user(users[it.pos]))
+        }
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

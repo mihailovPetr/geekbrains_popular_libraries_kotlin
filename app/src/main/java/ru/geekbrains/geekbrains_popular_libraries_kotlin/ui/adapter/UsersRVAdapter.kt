@@ -23,6 +23,12 @@ class UsersRVAdapter(val presenter: IUserListPresenter) :
 
     inner class ViewHolder(val vb: ItemUserBinding) : RecyclerView.ViewHolder(vb.root),
         UserItemView {
+
+        init {
+            itemView.setOnClickListener {
+                presenter.itemClickListener?.invoke(this)
+            }
+        }
         override var pos = -1
 
         override fun setLogin(text: String) {
